@@ -3,6 +3,7 @@ package assert
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -198,6 +199,22 @@ func Nil(obj interface{}, argName string) error {
 func NotNil(obj interface{}, argName string) error {
 	if isNil(obj) {
 		return argumentError{fmt.Sprintf("%s must not be nil", argName)}
+	}
+	return nil
+}
+
+// Matches verify that supplied value matches the supplied regular expression.
+func Matches(value string, regexp *regexp.Regexp, argName string) error {
+	if !regexp.MatchString(value) {
+		return argumentError{fmt.Sprintf("%s does not match the pattern", argName)}
+	}
+	return nil
+}
+
+// NotMatches verify that supplied value does not matches the supplied regular expression.
+func NotMatches(value string, regexp *regexp.Regexp, argName string) error {
+	if regexp.MatchString(value) {
+		return argumentError{fmt.Sprintf("%s does match the pattern", argName)}
 	}
 	return nil
 }
